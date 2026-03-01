@@ -58,6 +58,7 @@ export default function QuoteSection({ data }: Props) {
     >
       <div
         {...(quoteAttr ? { "data-sanity": quoteAttr() } : {})}
+        className="pt-24"
         style={{
           position: "sticky",
           top: 0,
@@ -67,12 +68,14 @@ export default function QuoteSection({ data }: Props) {
           alignItems: "center",
           justifyContent: "center",
           background:
-            "radial-gradient(ellipse at 50% 40%, rgba(120,20,20,0.45) 0%, #0a0a0a 55%)",
-          overflow: "hidden",
+            "radial-gradient(ellipse at 50% 45%, rgba(120,20,20,0.45) 0%, #0a0a0a 55%)",
         }}
       >
         {/* Text */}
-        <div style={{ textAlign: "center", maxWidth: "85vw" }} className="px-4">
+        <div
+          style={{ textAlign: "center", maxWidth: "85vw" }}
+          className="px-4 -mt-2"
+        >
           {lines.map((line, i) => (
             <motion.span
               key={i}
