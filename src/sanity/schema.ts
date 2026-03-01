@@ -1,13 +1,11 @@
-import {
-  defineArrayMember,
-  defineField,
-  defineType,
-} from "sanity";
+import { CommentIcon, BlockquoteIcon, CogIcon } from "@sanity/icons";
+import { defineField, defineType } from "sanity";
 
 export const testimonialSchema = defineType({
   name: "testimonial",
   title: "Testimonial",
   type: "document",
+  icon: CommentIcon,
   fields: [
     defineField({
       name: "text",
@@ -39,12 +37,22 @@ export const testimonialSchema = defineType({
   orderings: [
     { title: "Order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
   ],
+  preview: {
+    select: { author: "author", text: "text" },
+    prepare({ author, text }) {
+      return {
+        title: author || "Untitled testimonial",
+        subtitle: text ? (text.slice(0, 60) + (text.length > 60 ? "…" : "")) : "",
+      };
+    },
+  },
 });
 
 export const quoteSchema = defineType({
   name: "quote",
   title: "Quote section",
   type: "document",
+  icon: BlockquoteIcon,
   fields: [
     defineField({
       name: "lines",
@@ -67,12 +75,23 @@ export const quoteSchema = defineType({
       initialValue: "#start",
     }),
   ],
+  preview: {
+    select: { lines: "lines" },
+    prepare({ lines }) {
+      const firstLine = Array.isArray(lines) && lines[0] ? String(lines[0]) : "";
+      return {
+        title: "Quote section",
+        subtitle: firstLine ? (firstLine.slice(0, 50) + (firstLine.length > 50 ? "…" : "")) : "—",
+      };
+    },
+  },
 });
 
 export const serviceSchema = defineType({
   name: "service",
   title: "Service",
   type: "document",
+  icon: CogIcon,
   fields: [
     defineField({
       name: "slug",
@@ -114,4 +133,13 @@ export const serviceSchema = defineType({
   orderings: [
     { title: "Order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
   ],
+  preview: {
+    select: { title: "title", slug: "slug" },
+    prepare({ title, slug }) {
+      return {
+        title: title || "Untitled service",
+        subtitle: slug ? `Slug: ${slug}` : "",
+      };
+    },
+  },
 });

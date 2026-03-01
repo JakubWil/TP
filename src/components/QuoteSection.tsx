@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { createDataAttribute } from "next-sanity";
 import type { QuoteData } from "@/app/lib/sanity-data";
 
 const FALLBACK_LINES = [
@@ -42,6 +43,10 @@ export default function QuoteSection({ data }: Props) {
   }, [collapsed]);
 
   const bp = buttonUnlocked ? 1 : Math.max(0, (progress - 0.05) / 0.2);
+  const quoteFromSanity = data?._id && data._type;
+  const quoteAttr = quoteFromSanity
+    ? createDataAttribute({ id: data._id, type: "quote", path: ["_id"] })
+    : null;
 
   return (
     <div
@@ -52,6 +57,7 @@ export default function QuoteSection({ data }: Props) {
       }}
     >
       <div
+        {...(quoteAttr ? { "data-sanity": quoteAttr() } : {})}
         style={{
           position: "sticky",
           top: 0,

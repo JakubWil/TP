@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { createDataAttribute } from "next-sanity";
 import type { ServiceItem } from "@/app/lib/sanity-data";
 
 const FALLBACK_SERVICES: Array<{ id: string; title: string; description: string; features: string[]; image: string }> = [
@@ -10,6 +11,7 @@ const FALLBACK_SERVICES: Array<{ id: string; title: string; description: string;
   { id: "custom", title: "Custom Plans", description: "One-time personalised training plan for your goals and lifestyle.", features: ["Custom program", "No ongoing commitment"], image: "/custom.png" },
 ];
 
+/** Prefer Sanity asset URL; use local fallback only when no image is set in Studio. */
 function getImageUrl(service: ServiceItem): string {
   if (service.imageUrl) return service.imageUrl;
   const fallback: Record<string, string> = { "1-1": "/1-1.png", online: "/online.png", custom: "/custom.png" };
@@ -43,6 +45,8 @@ export default function ServicesSection({ data }: Props) {
   const services = data?.length
     ? data.map((s) => ({
         id: s.slug,
+        _id: s._id,
+        _type: s._type,
         title: s.title,
         description: s.description,
         features: s.features ?? [],
@@ -68,10 +72,16 @@ export default function ServicesSection({ data }: Props) {
       </motion.div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {services.map((service, index) => (
+        {services.map((service, index) => {
+          const fromSanity = "_id" in service && service._id && service._type;
+          const serviceAttr = fromSanity
+            ? createDataAttribute({ id: service._id, type: service._type, path: ["_id"] })
+            : null;
+          return (
           <motion.article
             key={service.id}
             id={service.id === "1-1" ? "1on1" : service.id === "custom" ? "plans" : service.id}
+            {...(serviceAttr ? { "data-sanity": serviceAttr() } : {})}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -114,7 +124,8 @@ export default function ServicesSection({ data }: Props) {
               </a>
             </div>
           </motion.article>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

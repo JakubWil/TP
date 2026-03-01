@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import { createDataAttribute } from "next-sanity";
 import type { TestimonialItem } from "@/app/lib/sanity-data";
 
 const CARD_HEIGHT_PX = 260;
@@ -8,9 +9,9 @@ const CARD_GAP_PX = 20;
 const VISIBLE_HEIGHT_PX = CARD_HEIGHT_PX * 2 + CARD_GAP_PX;
 
 const FALLBACK_TESTIMONIALS: TestimonialItem[] = [
-  { text: "If you are looking for a personal trainer who can change your life, motivate you, and teach you how to eat properly — you are in the right place.", author: "Angelika Lenartowicz, Newcastle, UK", initials: "AL" },
-  { text: "Just wanted to give a massive shoutout — honestly, he is the best trainer I have ever had!", author: "Hasan Miah, Newcastle, UK", initials: "HM" },
-  { text: "A game changer in my fitness journey. Highly recommend.", author: "Sarah Thompson, London, UK", initials: "ST" },
+  { _id: "fallback-1", text: "If you are looking for a personal trainer who can change your life, motivate you, and teach you how to eat properly — you are in the right place.", author: "Angelika Lenartowicz, Newcastle, UK", initials: "AL" },
+  { _id: "fallback-2", text: "Just wanted to give a massive shoutout — honestly, he is the best trainer I have ever had!", author: "Hasan Miah, Newcastle, UK", initials: "HM" },
+  { _id: "fallback-3", text: "A game changer in my fitness journey. Highly recommend.", author: "Sarah Thompson, London, UK", initials: "ST" },
 ];
 
 function getTotalContentHeight(count: number) {
@@ -111,10 +112,16 @@ export default function Testimonials({ data }: Props) {
             className="flex flex-col flex-shrink-0"
             style={{ minHeight: totalContentHeightPx, paddingBottom: "2rem" }}
           >
-            {testimonials.map((t, i) => (
+            {testimonials.map((t, i) => {
+              const fromSanity = t._id && !t._id.startsWith("fallback-");
+              const sanityAttr = fromSanity
+                ? createDataAttribute({ id: t._id, type: "testimonial", path: ["_id"] })
+                : null;
+              return (
               <div
-                key={i}
+                key={t._id ?? i}
                 ref={(el) => { itemRefs.current[i] = el; }}
+                {...(sanityAttr ? { "data-sanity": sanityAttr() } : {})}
                 className="flex-shrink-0 w-full overflow-hidden"
                 style={{
                   minHeight: CARD_HEIGHT_PX,
@@ -136,7 +143,8 @@ export default function Testimonials({ data }: Props) {
                   <span className="text-[#999] text-sm">— {t.author}</span>
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
         </div>
       </div>

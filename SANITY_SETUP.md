@@ -28,3 +28,11 @@ Strona Next.js pobiera dane z Sanity – zmienne w `.env.local` muszą być usta
 - **Service** – usługi (slug, tytuł, opis, lista cech, zdjęcie).
 
 Po pierwszym uruchomieniu Studia dodaj dokumenty tych typów; bez nich strona używa wbudowanych treści zastępczych.
+
+## Preview Mode i Visual Editing (Presentation Tool)
+
+- W Studio jest włączony **Presentation Tool** – w lewym pasku wybierz **Presentation**, żeby zobaczyć podgląd strony na żywo.
+- **Draft mode:** uruchom Next.js (`npm run dev`) i Studio (`npx sanity dev`). W Presentation wpisz adres strony (np. `http://localhost:3000`), włącz **Preview mode** – zmiany w Studio (wersje robocze) będą widoczne od razu na stronie.
+- **Połączenie z iframe:** aplikacja Next.js renderuje komponent `VisualEditing` (next-sanity) gdy draft mode jest włączony; bez niego Studio pokaże „Unable to connect”. Iframe po włączeniu preview ładuje `/api/draft` (ustawienie ciasteczka) i przekierowuje na `/` – wtedy połączenie się nawiązuje.
+- **API:** `GET /api/draft` włącza tryb podglądu (cookie), `GET /api/disable-draft` go wyłącza. W development bez `SANITY_PREVIEW_SECRET` draft i tak działa; w produkcji ustaw `SANITY_PREVIEW_SECRET` w `.env` i (opcjonalnie) dodaj go do URL w Studio.
+- **Lokalizacje:** przy każdym dokumencie (Testimonial, Quote, Service) w Studio widać „Used on” → strona główna `/`.

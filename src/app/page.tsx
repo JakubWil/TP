@@ -1,3 +1,4 @@
+import { draftMode } from "next/headers";
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
@@ -10,10 +11,11 @@ import Transformations from "@/components/Transformations";
 import { getQuote, getServices, getTestimonials } from "@/app/lib/sanity-data";
 
 export default async function Home() {
+  const { isEnabled: isDraft } = await draftMode();
   const [testimonials, quote, services] = await Promise.all([
-    getTestimonials(),
-    getQuote(),
-    getServices(),
+    getTestimonials(isDraft),
+    getQuote(isDraft),
+    getServices(isDraft),
   ]);
 
   return (

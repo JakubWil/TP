@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { Barlow_Condensed, DM_Sans } from "next/font/google";
+import { VisualEditing } from "next-sanity";
 import "./globals.css";
 
 const barlowCondensed = Barlow_Condensed({
@@ -20,14 +22,18 @@ export const metadata: Metadata = {
     "More than a fitness plan. A complete coaching experience designed to transform your body and mindset.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { isEnabled } = await draftMode();
   return (
     <html lang="en" className={`${barlowCondensed.variable} ${dmSans.variable}`}>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        {children}
+        {isEnabled && <VisualEditing />}
+      </body>
     </html>
   );
 }
