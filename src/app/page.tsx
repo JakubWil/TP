@@ -8,14 +8,20 @@ import QuoteSection from "@/components/QuoteSection";
 import ServicesSection from "@/components/ServicesSection";
 import Testimonials from "@/components/Testimonials";
 import Transformations from "@/components/Transformations";
-import { getQuote, getServices, getTestimonials } from "@/app/lib/sanity-data";
+import {
+  getQuote,
+  getServices,
+  getTestimonials,
+  getTransformations,
+} from "@/app/lib/sanity-data";
 
 export default async function Home() {
   const { isEnabled: isDraft } = await draftMode();
-  const [testimonials, quote, services] = await Promise.all([
+  const [testimonials, quote, services, transformations] = await Promise.all([
     getTestimonials(isDraft),
     getQuote(isDraft),
     getServices(isDraft),
+    getTransformations(isDraft),
   ]);
 
   return (
@@ -23,7 +29,7 @@ export default async function Home() {
       <Navbar />
       <HeroSection />
       <HowItWorks />
-      <Transformations />
+      <Transformations data={transformations} />
       <QuoteSection data={quote} />
       <Testimonials data={testimonials} />
       <ServicesSection data={services} />

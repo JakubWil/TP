@@ -2,7 +2,12 @@ import { defineConfig } from "sanity";
 import { presentationTool } from "sanity/presentation";
 import { structureTool } from "sanity/structure";
 import { resolve } from "./src/sanity/presentation/resolve";
-import { testimonialSchema, quoteSchema, serviceSchema } from "./src/sanity/schema";
+import {
+  testimonialSchema,
+  quoteSchema,
+  serviceSchema,
+  transformationSchema,
+} from "./src/sanity/schema";
 
 // Project ID z sanity.io/manage (projekt JDL) – Studio ładuje się z npx sanity dev
 const projectId = "64aerxzk";
@@ -31,6 +36,6 @@ export default defineConfig({
     }),
   ],
   schema: {
-    types: [testimonialSchema, quoteSchema, serviceSchema],
+    types: [testimonialSchema, quoteSchema, serviceSchema, transformationSchema],
   },
 });

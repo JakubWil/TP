@@ -23,3 +23,15 @@ export const servicesQuery = `*[_type == "service"] | order(order asc) {
   features,
   "imageUrl": image.asset->url
 }`;
+
+export const transformationsQuery = `*[_type == "transformation"] | order(order asc) {
+  _id,
+  _type,
+  title,
+  "transformationImage": transformationImage.asset->url,
+  stats,
+  quote,
+  description,
+  resultsList,
+  order
+}`;

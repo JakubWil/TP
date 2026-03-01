@@ -35,14 +35,18 @@ export const testimonialSchema = defineType({
     }),
   ],
   orderings: [
-    { title: "Order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
+    {
+      title: "Order",
+      name: "orderAsc",
+      by: [{ field: "order", direction: "asc" }],
+    },
   ],
   preview: {
     select: { author: "author", text: "text" },
     prepare({ author, text }) {
       return {
         title: author || "Untitled testimonial",
-        subtitle: text ? (text.slice(0, 60) + (text.length > 60 ? "…" : "")) : "",
+        subtitle: text ? text.slice(0, 60) + (text.length > 60 ? "…" : "") : "",
       };
     },
   },
@@ -78,10 +82,13 @@ export const quoteSchema = defineType({
   preview: {
     select: { lines: "lines" },
     prepare({ lines }) {
-      const firstLine = Array.isArray(lines) && lines[0] ? String(lines[0]) : "";
+      const firstLine =
+        Array.isArray(lines) && lines[0] ? String(lines[0]) : "";
       return {
         title: "Quote section",
-        subtitle: firstLine ? (firstLine.slice(0, 50) + (firstLine.length > 50 ? "…" : "")) : "—",
+        subtitle: firstLine
+          ? firstLine.slice(0, 50) + (firstLine.length > 50 ? "…" : "")
+          : "—",
       };
     },
   },
@@ -131,7 +138,11 @@ export const serviceSchema = defineType({
     }),
   ],
   orderings: [
-    { title: "Order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
+    {
+      title: "Order",
+      name: "orderAsc",
+      by: [{ field: "order", direction: "asc" }],
+    },
   ],
   preview: {
     select: { title: "title", slug: "slug" },
@@ -143,3 +154,5 @@ export const serviceSchema = defineType({
     },
   },
 });
+
+export { transformationSchema } from "./schemas/transformation";

@@ -34,5 +34,16 @@ export const resolve = {
         ],
       }),
     }),
+    transformation: defineLocations({
+      select: { title: "title" },
+      resolve: (doc) => ({
+        locations: [
+          {
+            title: doc?.title || "Transformation",
+            href: "/",
+          },
+        ],
+      }),
+    }),
   },
 };

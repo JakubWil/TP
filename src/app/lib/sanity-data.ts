@@ -1,5 +1,10 @@
 import { client } from "@/sanity/client";
-import { quoteQuery, servicesQuery, testimonialsQuery } from "@/sanity/lib/queries";
+import {
+  quoteQuery,
+  servicesQuery,
+  testimonialsQuery,
+  transformationsQuery,
+} from "@/sanity/lib/queries";
 
 export type TestimonialItem = {
   _id: string;
@@ -27,17 +32,35 @@ export type ServiceItem = {
   imageUrl: string | null;
 };
 
+export type TransformationItem = {
+  _id: string;
+  _type?: string;
+  title: string;
+  transformationImage: string | null;
+  stats: string | null;
+  quote: string | null;
+  description: string | null;
+  resultsList: string[];
+  order?: number | null;
+};
+
 function hasSanityConfig(): boolean {
   return Boolean(
     process.env.NEXT_PUBLIC_SANITY_PROJECT_ID &&
-      process.env.NEXT_PUBLIC_SANITY_PROJECT_ID.length > 0
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID.length > 0,
   );
 }
 
-export async function getTestimonials(draft = false): Promise<TestimonialItem[]> {
+export async function getTestimonials(
+  draft = false,
+): Promise<TestimonialItem[]> {
   if (!hasSanityConfig()) return [];
   try {
-    const data = await client.fetch<TestimonialItem[]>(testimonialsQuery, undefined, { draft });
+    const data = await client.fetch<TestimonialItem[]>(
+      testimonialsQuery,
+      undefined,
+      { draft },
+    );
     return Array.isArray(data) ? data : [];
   } catch {
     return [];
@@ -47,7 +70,9 @@ export async function getTestimonials(draft = false): Promise<TestimonialItem[]>
 export async function getQuote(draft = false): Promise<QuoteData> {
   if (!hasSanityConfig()) return null;
   try {
-    const data = await client.fetch<QuoteData>(quoteQuery, undefined, { draft });
+    const data = await client.fetch<QuoteData>(quoteQuery, undefined, {
+      draft,
+    });
     return data;
   } catch {
     return null;
@@ -57,7 +82,25 @@ export async function getQuote(draft = false): Promise<QuoteData> {
 export async function getServices(draft = false): Promise<ServiceItem[]> {
   if (!hasSanityConfig()) return [];
   try {
-    const data = await client.fetch<ServiceItem[]>(servicesQuery, undefined, { draft });
+    const data = await client.fetch<ServiceItem[]>(servicesQuery, undefined, {
+      draft,
+    });
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function getTransformations(
+  draft = false,
+): Promise<TransformationItem[]> {
+  if (!hasSanityConfig()) return [];
+  try {
+    const data = await client.fetch<TransformationItem[]>(
+      transformationsQuery,
+      undefined,
+      { draft },
+    );
     return Array.isArray(data) ? data : [];
   } catch {
     return [];
